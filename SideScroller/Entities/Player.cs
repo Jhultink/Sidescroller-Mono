@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SideScroller.Entities;
+using SideScroller.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,108 +11,113 @@ using System.Text;
 
 namespace MooleyMania
 {
-    public class Player
+    public class Player : Entity
     {
-        private Texture2D texture;
+        private const float VERTICAL_VELOCITY = 3f;
+
+        private const float HORIZONTAL_VELOCITY = 6f;
+
+        public const int PickupRange = 10;
 
         public Vector2 velocity;
 
-        private Vector2 position;
-        public Vector2 Position
-        {
-            get { return position; }
-        }
+        public Vector2 Position;
 
-        public Vector2 TilePosition { get { return position / Tile.Size; } }
+        public Inventory Inventory;
 
-        private Rectangle rectangle;
+        public Vector2 TilePosition { get { return Position / Tile.Size; } }
+
+        public Rectangle Bounds;
 
         private bool hasJumped = false;
 
         public Player(int x, int y)
         {
-            position = new Vector2(x * Tile.Size, y * Tile.Size);
+            Position = new Vector2(x * Tile.Size, y * Tile.Size);
         }
 
-
-        public void Load(ContentManager Content)
+        public override void Load(ContentManager Content)
         {
             texture = Content.Load<Texture2D>("player");
         }
 
-
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
-            position += velocity;
-            rectangle = new Rectangle((int)position.X, (int)position.Y, Tile.Size * 2, Tile.Size * 3);
+            Position += velocity;
+            Bounds = new Rectangle((int)Position.X, (int)Position.Y, Tile.Size * 2, Tile.Size * 3);
 
             Input(gameTime);
 
             if (velocity.Y < 10)
                 velocity.Y += 0.4f;
-
         }
-
-
+        
         public void Input(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-                velocity.X = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 3;
-            else if (Keyboard.GetState().IsKeyDown(Keys.A))
-                velocity.X = -(float)gameTime.ElapsedGameTime.TotalMilliseconds / 3;
-            else velocity.X = 0f;
+            //if (Keyboard.GetState().IsKeyDown(Keys.D))
+            //     velocity.X = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 3;
+            //else if (Keyboard.GetState().IsKeyDown(Keys.A))
+            //    velocity.X = -(float)gameTime.ElapsedGameTime.TotalMilliseconds / 3;
+            //else
+            //    velocity.X = 0f;
 
-            if(Keyboard.GetState().IsKeyDown(Keys.Space) && !hasJumped)
+
+            if (Keyboard.GetState().IsKeyDown(Keys.D))
+                velocity.X = HORIZONTAL_VELOCITY;
+            else if (Keyboard.GetState().IsKeyDown(Keys.A))
+                velocity.X = -HORIZONTAL_VELOCITY;
+            else
+                velocity.X = 0f;
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && !hasJumped)
             {
-                position.Y -= 5f;
-                velocity.Y = -9f;
+                Position.Y -= 3f;
+                velocity.Y = -VERTICAL_VELOCITY;
                 hasJumped = true;
             }
         }
-
-
+        
         public void Collision(Rectangle newRectangle, int xOffset, int yOffset)
-        { 
-            
-            if(rectangle.TouchTopOf(newRectangle))
+        {             
+            if(Bounds.TouchTopOf(newRectangle))
             {
-                rectangle.Y = newRectangle.Y - rectangle.Height;
+                Bounds.Y = newRectangle.Y - Bounds.Height;
                 velocity.Y = 0f;
                 hasJumped = false;
             }
 
-            if(rectangle.TouchLeftOf(newRectangle))
+            if(Bounds.TouchLeftOf(newRectangle))
             {
-                position.X = newRectangle.X - rectangle.Width - 1;
+                Position.X = newRectangle.X - Bounds.Width - 1;
                 //position.X = newRectangle.X + newRectangle.Width + 1;
             }
-            if (rectangle.TouchRightOf(newRectangle))
+            if (Bounds.TouchRightOf(newRectangle))
             {
-                position.X = newRectangle.X + newRectangle.Width + 1;
+                Position.X = newRectangle.X + newRectangle.Width + 1;
                 //position.X = newRectangle.X - rectangle.Width - 2;
 
             }
 
-            if (rectangle.TouchBottomOf(newRectangle))
+            if (Bounds.TouchBottomOf(newRectangle))
             {
                 velocity.Y = 1f;
             }
 
 
-            if (position.X < 0)
-                position.X = 0;
-            if (position.X > xOffset * Tile.Size - rectangle.Width)
-                position.X = xOffset * Tile.Size - rectangle.Width;
-            if (position.Y < 0)
+            if (Position.X < 0)
+                Position.X = 0;
+            if (Position.X > xOffset * Tile.Size - Bounds.Width)
+                Position.X = xOffset * Tile.Size - Bounds.Width;
+            if (Position.Y < 0)
                 velocity.Y = 1f;
-            if (position.Y > yOffset * Tile.Size - rectangle.Height)
-                position.Y = yOffset * Tile.Size - rectangle.Height;
+            if (Position.Y > yOffset * Tile.Size - Bounds.Height)
+                Position.Y = yOffset * Tile.Size - Bounds.Height;
         }
 
 
-        public void Draw(SpriteBatch batch)
+        public void Draw(SpriteBatch batch, Camera camera)
         {
-            batch.Draw(texture, rectangle, Color.White);
+            batch.Draw(texture, Bounds, Color.White);
         }
     }
 }

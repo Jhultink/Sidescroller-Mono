@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MooleyMania.World.Generation;
 using MooleyMania.World.Tiles;
+using SideScroller.World;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,15 +15,13 @@ namespace MooleyMania
 {
     public class Map
     {
-
-        public List<Tile> dirtTiles { get; } = new List<Tile>();
-
         public readonly int MaxWidth;
+
         public readonly int MaxHeight;
+
         private Tile[,] tiles;
 
-
-        //int width, height;
+        public List<Drop> Drops { get; } = new List<Drop>(); 
 
         public Map(int width, int height)
         {
@@ -49,8 +48,8 @@ namespace MooleyMania
 
             int totalWidth = this.MaxWidth;
             int totalHeight = this.MaxHeight;
-            int skyStart = this.MaxHeight / 10;
-            int hillsStart = this.MaxHeight / 5;
+            int skyStart = this.MaxHeight / 10; // At 10%
+            int hillsStart = this.MaxHeight / 5; // At 20%
 
             //int totalWidth = this.MaxWidth;
             //int totalHeight = this.MaxWidth;
@@ -60,7 +59,6 @@ namespace MooleyMania
             tiles = new Tile[totalWidth, totalHeight];
 
             Random random = new Random();
-            //Bitmap bitmap = new Bitmap(totalWidth, totalHeight);
 
             float offset = (float)random.NextDouble() * Int16.MaxValue;
 
@@ -69,7 +67,6 @@ namespace MooleyMania
                 // Generate sky
                 for (int j = 0; j < skyStart; j++)
                 {
-                    //bitmap.SetPixel(i, j, Color.SkyBlue);
                     tiles[i, j] = new Air(i, j);
                 }
 
@@ -79,19 +76,14 @@ namespace MooleyMania
                 for (int j = skyStart; j < hillsStart; j++)
                 {
                     if (j < landHeight)
-                        //bitmap.SetPixel(i, j, Color.SkyBlue);
                         tiles[i, j] = new Air(i, j);
-
                     else
-                        //bitmap.SetPixel(i, j, Color.Brown);
                         tiles[i, j] = new Dirt(i, j);
-
                 }
 
                 // Generate underground
                 for (int j = hillsStart; j < totalHeight; j++)
                 {
-                    //bitmap.SetPixel(i, j, Color.Brown);
                     tiles[i, j] = new Dirt(i, j);
                 }
 
@@ -101,8 +93,6 @@ namespace MooleyMania
 
                     if (cavesPerlin > .2)
                     {
-                        //if(bitmap.GetPixel(i, j).ToArgb() != Color.SkyBlue.ToArgb())
-                        //    bitmap.SetPixel(i, j, Color.White);
                         tiles[i, j] = new Air(i, j);
                     }
                 }
@@ -133,6 +123,7 @@ namespace MooleyMania
 
         public int Draw(SpriteBatch batch, Camera camera)
         {
+            // Render tiles around character
             int renderDistance = (int)(camera.Bounds.Width / Tile.Size) + 5;
             int calls = 0;
 
@@ -148,8 +139,42 @@ namespace MooleyMania
                 }
             }
 
+            // Render drops on top of tiles
+            foreach(Drop drop in Drops)
+            {
+                drop.Draw(batch);
+            }
+            
             return calls;
+        }
 
+        public void Update(GameTime gameTime)
+        {
+            // Update drops
+            for (int i = Drops.Count - 1; i >= 0; i--)
+            {
+                Drop drop = Drops[i];
+
+                // Use map to detect collisions
+                drop.DetectCollisions(this);
+
+                // Calc dist from drop tp player
+                float distToPlayer = Vector2.Distance(drop.Position, Main.Player.Bounds.Center.ToVector2());
+
+                if (distToPlayer < 2 * Tile.Size)
+                {
+                    // Pick up
+                    Drops.Remove(drop);
+                }
+                else if (distToPlayer < Player.PickupRange * Tile.Size)
+                {
+                    // Move drop towards player
+                    drop.MoveToPlayer(Main.Player);
+                }
+
+                // Will move it
+                drop.Update(gameTime);
+            }
         }
 
         public void Load(ContentManager content)

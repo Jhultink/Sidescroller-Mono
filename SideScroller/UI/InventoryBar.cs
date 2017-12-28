@@ -5,45 +5,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Content;
+using SideScroller.UI;
 
 namespace MooleyMania.UI
 {
     public class InventoryBar : UIElement
     {
-        private static int slotCount = 30;
-        private static int slotSize = 40;
+        private static int slotCount = 10;
 
-        private InventoryBarSlot[] slots;
+        private InventorySlot[] slots = new InventorySlot[slotCount];
 
-        public InventoryBar(Camera camera) : base(new Vector2(camera.Bounds.Right - 50, camera.Bounds.Top + 50), @"InventoryBackground", 50, camera.Bounds.Height - 100)
+        public InventoryBar(Camera camera) : base(new Vector2(camera.Bounds.Right - 50, camera.Bounds.Top + 50), @"InventoryBackground", 40, camera.Bounds.Height - 100)
         {
-            float heightAndMargin = (this.Height - slotSize) / (slotCount - 1);
+            DrawSlots();
+        }
 
-            if(heightAndMargin < slotSize)
-            {
-                slotCount = this.Height / slotSize;
-                heightAndMargin = (this.Height - slotSize) / (slotCount - 1);
-            }
-
-            slots = new InventoryBarSlot[slotCount];
+        private void DrawSlots()
+        {
+            float slotPart = this.Height / (float) ((slotCount * 6) - 1);
+            float slotSize = slotPart * 5;
+            float slotMargin = slotPart;
+            int horizMargin = (int)((this.Width - slotSize) / 2f);
 
             for (int i = 0; i < slotCount; i++)
             {
                 Vector2 pos;
 
                 if (i < slotCount - 1)
-                    pos = new Vector2(5, i * heightAndMargin);
+                    pos = new Vector2(horizMargin, i * (slotSize + slotMargin));
                 else
-                    pos = new Vector2(5, this.Height - slotSize);
+                    pos = new Vector2(horizMargin, this.Height - slotSize);
 
-                slots[i] = new InventoryBarSlot(this.RelativePosition + pos, slotSize, slotSize);
+                slots[i] = new InventorySlot(this.RelativePosition + pos, (int) slotSize, (int) slotSize);
             }
         }
 
         public override void Draw(SpriteBatch spriteBatch, Camera camera)
         {
             base.Draw(spriteBatch, camera);
-            foreach(InventoryBarSlot slot in slots)
+            foreach(InventorySlot slot in slots)
             {
                 slot.Draw(spriteBatch, camera);
             }
@@ -52,7 +52,7 @@ namespace MooleyMania.UI
         public override void Load(ContentManager content)
         {
             base.Load(content);
-            foreach (InventoryBarSlot slot in slots)
+            foreach (InventorySlot slot in slots)
             {
                 slot.Load(content);
             }
@@ -62,15 +62,25 @@ namespace MooleyMania.UI
         {
             base.UpdateRelativePosition(relPos);
 
-            
-        }
+            float slotPart = this.Height / (float)((slotCount * 6) - 1);
+            float slotSize = slotPart * 5;
+            float slotMargin = slotPart;
+            int horizMargin = (int)((this.Width - slotSize) / 2f);
 
-        class InventoryBarSlot : UIElement
-        {
-            public InventoryBarSlot(Vector2 relativePosition, int width, int height) : base(relativePosition, "inventorySlot", width, height)
+            for (int i = 0; i < slotCount; i++)
             {
+                Vector2 pos;
+
+                if (i < slotCount - 1)
+                    pos = new Vector2(horizMargin, i * (slotSize + slotMargin));
+                else
+                    pos = new Vector2(horizMargin, this.Height - slotSize);
+
+                slots[i].Width = (int)slotSize;
+                slots[i].Height = (int)slotSize;
+                slots[i].RelativePosition = this.RelativePosition + pos;
 
             }
-        }
+        }        
     }
 }

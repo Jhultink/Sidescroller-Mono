@@ -26,7 +26,6 @@ namespace MooleyMania
             viewport = newViewport;
         }
 
-
         public void Update(Vector2 position, int xOffset, int yOffset)
         {
             if (position.X < viewport.Width / 2)
@@ -42,7 +41,6 @@ namespace MooleyMania
                 center.Y = (yOffset * Tile.Size) - (viewport.Height / 2);
             else
                 center.Y = position.Y;
-
 
             transform = Matrix.CreateTranslation(new Vector3(-center.X + (viewport.Width / 2),
                                                              -center.Y + (viewport.Height / 2), 1f)) * Matrix.CreateScale(Zoom);

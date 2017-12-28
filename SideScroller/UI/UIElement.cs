@@ -14,7 +14,6 @@ namespace MooleyMania.UI
 
         public bool IsVisible;
         public Vector2 RelativePosition;
-        private UIAnchor anchor;
         public string TextureName;
         public Texture2D Texture;
         public int Width, Height;
@@ -22,7 +21,6 @@ namespace MooleyMania.UI
 
         public UIElement(Vector2 relativePosition, string textureName, int width, int height, bool isVisible = true)
         {
-            this.anchor = anchor;
             this.RelativePosition = relativePosition;
             this.TextureName = textureName;
             this.Width = width;

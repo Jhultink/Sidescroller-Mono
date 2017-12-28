@@ -8,7 +8,7 @@ namespace MooleyMania
 {
     public static class RectangleHelper
     {
-        private const int Error = 2;
+        private const int Error = 3;
 
         public static bool TouchTopOf(this Rectangle r1, Rectangle r2)
         {
@@ -41,6 +41,5 @@ namespace MooleyMania
                     r1.Top <= r2.Bottom - (r2.Width / 4) &&
                     r1.Bottom >= r2.Top + (r2.Width / 4));
         }
-
     }
 }

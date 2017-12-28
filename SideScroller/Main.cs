@@ -11,6 +11,9 @@ using System.Diagnostics;
 using MooleyMania.Helpers;
 using MooleyMania.UI;
 using MooleyMania.World.Tiles;
+using SideScroller.World;
+using SideScroller.Helpers;
+using SideScroller.UI;
 
 namespace MooleyMania
 {
@@ -23,6 +26,7 @@ namespace MooleyMania
         SpriteBatch spriteBatch;
         Camera camera;
         InventoryBar inventoryBar;
+        Inventory inventory;
 
         KeyboardState pastKeyboardState;
         KeyboardState currentKeyboardState;
@@ -51,7 +55,7 @@ namespace MooleyMania
             Player = new Player(50, 0);
             camera = new Camera(GraphicsDevice.Viewport);
             inventoryBar = new InventoryBar(camera);
-
+            inventory = new Inventory(camera);
 
             base.Initialize();
         }
@@ -68,10 +72,12 @@ namespace MooleyMania
 
             Map.Generate();
 
+            Drop.Content = Content;
+
             Map.Load(Content);
             Player.Load(Content);
             inventoryBar.Load(Content);
-
+            inventory.Load(Content);
         }
 
         protected override void UnloadContent()
@@ -87,14 +93,17 @@ namespace MooleyMania
             pastMouseState = currentMouseState;
             currentMouseState = Mouse.GetState();
 
-            // Allows the game to exit
-            if (pastKeyboardState.IsKeyDown(Keys.Escape) && currentKeyboardState.IsKeyUp(Keys.Escape))
-                this.Exit();
-
+            HandleKeyInput();
+            
             // Update player
             Player.Update(gameTime);
 
+            // Update Map
+            Map.Update(gameTime);
+
+            // Update inventory
             inventoryBar.Update(gameTime);
+            inventory.Update(gameTime);
 
             // Player collisions
             int collisionUpdateDistance = 50;
@@ -120,34 +129,59 @@ namespace MooleyMania
                 // Checks to make sure clicks are inside screen
                 if (currentMouseState.X >= 0 && currentMouseState.X < camera.Bounds.Width && currentMouseState.Y > 0 && currentMouseState.Y < camera.Bounds.Height)
                 {
-                    Map.Tiles[(int)currentMouseState.ToAbsolute(camera).X / Tile.Size, (int)currentMouseState.ToAbsolute(camera).Y / Tile.Size]
-                       = new Air((int)currentMouseState.ToAbsolute(camera).X / Tile.Size, (int)currentMouseState.ToAbsolute(camera).Y / Tile.Size);
+                    float xClick = currentMouseState.ToAbsolute(camera).X;
+                    float yClick = currentMouseState.ToAbsolute(camera).Y;
+
+                    Vector2 tileClick = currentMouseState.ToAbsolute(camera).ToTile();
+
+                    Tile tile = Map.Tiles[(int)xClick / Tile.Size, (int)yClick / Tile.Size];
+
+                    if (tile.Type != TileType.Air)
+                    {
+                        Map.Drops.Add(new Drop(
+                            (int)tileClick.X,
+                            (int)tileClick.Y,
+                            Map.Tiles[(int) xClick / Tile.Size, (int) yClick/ Tile.Size].Type));
+
+                        tile.Clicked(gameTime);
+                    }
                 }
             }
-
 
             Debug.WriteLineIf(gameTime.IsRunningSlowly, "Update is running slowly: " + calls + " tiles updated");
             base.Update(gameTime);
         }
 
+        private void HandleKeyInput()
+        {
+            // Allows the game to exit
+            if (pastKeyboardState.IsKeyDown(Keys.Escape) && currentKeyboardState.IsKeyUp(Keys.Escape))
+                this.Exit();
+
+            // Show inventory
+            if (pastKeyboardState.IsKeyDown(Keys.E) && currentKeyboardState.IsKeyUp(Keys.E))
+                inventory.IsVisible = !inventory.IsVisible;
+        }
 
         protected override void Draw(GameTime gameTime)
         {
+            // Set background to blue
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.Transform);
 
+            // Draw map
             int calls = Map.Draw(spriteBatch, camera);
-            Player.Draw(spriteBatch);
-
-            inventoryBar.Draw(spriteBatch, camera);
-
             Debug.WriteLineIf(gameTime.IsRunningSlowly, "Draw is running slowly: " + calls + " tiles updated");
 
+            Player.Draw(spriteBatch, camera);
+
+            // Inventory
+            inventoryBar.Draw(spriteBatch, camera);
+            inventory.Draw(spriteBatch, camera);
 
             spriteBatch.End();
-
-
+            
             base.Draw(gameTime);
         }
     }

@@ -14,13 +14,10 @@ namespace MooleyMania.World.Tiles
         {
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(texture, Rectangle, Color.White);
-        }
-
         public override void Load(ContentManager content)
         {
+            this.content = content;
+
             if (new Random().Next(2) == 1)
                 texture = content.Load<Texture2D>(@"Dirt\Fill1");
             else

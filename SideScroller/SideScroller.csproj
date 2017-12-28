@@ -41,18 +41,23 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Helpers\MouseHelper.cs" />
     <Compile Include="Helpers\RectangleHelper.cs" />
+    <Compile Include="Helpers\VectorHelpers.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\Inventory.cs" />
     <Compile Include="UI\InventoryBar.cs" />
+    <Compile Include="UI\InventorySlot.cs" />
     <Compile Include="UI\UIElement.cs" />
     <Compile Include="World\Camera.cs" />
+    <Compile Include="World\Drop.cs" />
     <Compile Include="World\Generation\Perlin.cs" />
     <Compile Include="World\Map.cs" />
-    <Compile Include="World\TileId.cs" />
+    <Compile Include="World\TileType.cs" />
     <Compile Include="World\Tiles\Air.cs" />
     <Compile Include="World\Tiles\Dirt.cs" />
     <Compile Include="World\Tiles\ITile.cs" />
@@ -68,24 +73,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Air.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Dirt\Fill1.PNG">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Dirt\Fill2.PNG">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\InventoryBackground.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\InventorySlot.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\player.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

@@ -19,6 +19,7 @@ namespace MooleyMania.World.Tiles
 
         public override void Load(ContentManager content)
         {
+            base.Load(content);
         }
     }
 }
