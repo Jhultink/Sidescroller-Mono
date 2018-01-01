@@ -19,27 +19,21 @@ namespace SideScroller.World
 
         public Vector2 Position { get; set; }
 
+        public TileType Type { get; private set; }
+
         private Vector2 velocity;
         private Rectangle bounds;
         private Texture2D texture;
-        private TileType tile;
         private object toTile;
-        private TileType type;
 
-        public Drop(int tileX, int tileY, TileType tile)
+        public Drop(int tileX, int tileY, TileType type)
         {
             float centeringOffset = (Tile.Size - Drop.Size) / 2.0f;
 
             Position = new Vector2((tileX * Tile.Size) + centeringOffset, (tileY * Tile.Size) + centeringOffset);
             velocity = new Vector2();
-            this.tile = tile;
-            texture = Content.Load<Texture2D>(tile.ToString());
-        }
-
-        public Drop(object toTile, TileType type)
-        {
-            this.toTile = toTile;
-            this.type = type;
+            this.Type = type;
+            texture = Content.Load<Texture2D>(type.ToString());
         }
 
         public void Draw(SpriteBatch batch)

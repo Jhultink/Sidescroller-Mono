@@ -21,12 +21,13 @@ namespace MooleyMania
     {
         public static Map Map;
         public static Player Player;
+        public static InventoryBar inventoryBar;
+        public static Inventory inventory;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Camera camera;
-        InventoryBar inventoryBar;
-        Inventory inventory;
+        
 
         KeyboardState pastKeyboardState;
         KeyboardState currentKeyboardState;

@@ -57,7 +57,8 @@
     <Compile Include="World\Drop.cs" />
     <Compile Include="World\Generation\Perlin.cs" />
     <Compile Include="World\Map.cs" />
-    <Compile Include="World\TileType.cs" />
+    <Compile Include="World\Tiles\TileOrientation.cs" />
+    <Compile Include="World\Tiles\TileType.cs" />
     <Compile Include="World\Tiles\Air.cs" />
     <Compile Include="World\Tiles\Dirt.cs" />
     <Compile Include="World\Tiles\ITile.cs" />

@@ -5,12 +5,13 @@ using System.Text;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using SideScroller.World.Tiles;
 
 namespace MooleyMania.World.Tiles
 {
     class SimpleTile : Tile
     {
-        public SimpleTile(int xCord, int yCord, TileType type) : base(xCord, yCord, type)
+        public SimpleTile(int xCord, int yCord, TileType type, TileOrientation orientation, Map map) : base(xCord, yCord, type, orientation, map)
         {
         }
 

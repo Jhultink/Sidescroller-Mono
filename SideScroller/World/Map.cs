@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MooleyMania.World.Generation;
 using MooleyMania.World.Tiles;
 using SideScroller.World;
+using SideScroller.World.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -51,11 +52,6 @@ namespace MooleyMania
             int skyStart = this.MaxHeight / 10; // At 10%
             int hillsStart = this.MaxHeight / 5; // At 20%
 
-            //int totalWidth = this.MaxWidth;
-            //int totalHeight = this.MaxWidth;
-            //int skyStart = 10;
-            //int hillsStart = 99;
-
             tiles = new Tile[totalWidth, totalHeight];
 
             Random random = new Random();
@@ -67,7 +63,7 @@ namespace MooleyMania
                 // Generate sky
                 for (int j = 0; j < skyStart; j++)
                 {
-                    tiles[i, j] = new Air(i, j);
+                    tiles[i, j] = new Air(i, j, TileOrientation.Center, this);
                 }
 
                 // Generate hills 
@@ -76,15 +72,15 @@ namespace MooleyMania
                 for (int j = skyStart; j < hillsStart; j++)
                 {
                     if (j < landHeight)
-                        tiles[i, j] = new Air(i, j);
+                        tiles[i, j] = new Air(i, j, TileOrientation.Center, this);
                     else
-                        tiles[i, j] = new Dirt(i, j);
+                        tiles[i, j] = new Dirt(i, j, TileOrientation.Center, this);
                 }
 
                 // Generate underground
                 for (int j = hillsStart; j < totalHeight; j++)
                 {
-                    tiles[i, j] = new Dirt(i, j);
+                    tiles[i, j] = new Dirt(i, j, TileOrientation.Center, this);
                 }
 
                 for (int j = skyStart; j < totalHeight; j++)
@@ -93,12 +89,22 @@ namespace MooleyMania
 
                     if (cavesPerlin > .2)
                     {
-                        tiles[i, j] = new Air(i, j);
+                        tiles[i, j] = new Air(i, j, TileOrientation.Center, this);
                     }
                 }
             }
 
+            for (int i = 0; i < totalWidth; i++)
+            {
+                for (int j = 0; j < totalHeight; j++)
+                {
+                    if (tiles[i, j].Type == TileType.Air)
+                    {
 
+                    }
+                }
+            }
+        
             Bitmap bitmap = new Bitmap(totalWidth, totalHeight);
 
             for (int i = 0; i < totalWidth; i++)
@@ -165,6 +171,7 @@ namespace MooleyMania
                 {
                     // Pick up
                     Drops.Remove(drop);
+                    Main.inventory.AddItems(drop.Type, 1);
                 }
                 else if (distToPlayer < Player.PickupRange * Tile.Size)
                 {

@@ -67,5 +67,34 @@ namespace SideScroller.UI
                 }
             }
         }
+
+        public void AddItems(TileType type, int count)
+        {
+            // Try to add to existing slot
+            for (int x = 0; x < horizSlotCount; x++)
+            {
+                for (int y = 0; y < vertSlotCount; y++)
+                {
+                    if(slots[x, y].Type == type)
+                    {
+                        slots[x, y].AddItems(type, count);
+                        return;
+                    }
+                }
+            }
+
+            // Add to an empty slot
+            for (int x = 0; x < horizSlotCount; x++)
+            {
+                for (int y = 0; y < vertSlotCount; y++)
+                {
+                    if (slots[x, y].Type == null)
+                    {
+                        slots[x, y].AddItems(type, count);
+                        return;
+                    }
+                }
+            }
+        }
     }
 }

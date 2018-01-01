@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MooleyMania.World.Tiles;
+using SideScroller.World.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,12 @@ namespace MooleyMania
     {
         public const int Size = 12;
         public TileType Type;
+        public TileOrientation Orientation;
         protected ContentManager content;
-
+        protected Map map;
         protected Texture2D texture;
+        protected int xTile;
+        protected int yTile;
 
         public Rectangle Rectangle { get; protected set; }
 
@@ -36,9 +40,13 @@ namespace MooleyMania
             this.texture = this.content.Load<Texture2D>(TileType.Air.ToString());
         }
 
-        protected Tile(int xCord, int yCord, TileType type)
+        protected Tile(int xCord, int yCord, TileType type, TileOrientation orientation, Map map)
         {
+            this.xTile = xCord;
+            this.yTile = yCord;
+            this.map = map;
             this.Type = type;
+            this.Orientation = orientation;
             this.Rectangle = new Rectangle(xCord * Tile.Size, (yCord * Tile.Size), Tile.Size, Tile.Size);
         }
     }
