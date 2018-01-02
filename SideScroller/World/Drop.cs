@@ -24,7 +24,6 @@ namespace SideScroller.World
         private Vector2 velocity;
         private Rectangle bounds;
         private Texture2D texture;
-        private object toTile;
 
         public Drop(int tileX, int tileY, TileType type)
         {

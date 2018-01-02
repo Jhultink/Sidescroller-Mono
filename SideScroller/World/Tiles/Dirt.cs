@@ -11,7 +11,7 @@ namespace MooleyMania.World.Tiles
 {
     public class Dirt : Tile
     {
-        public Dirt(int xCord, int yCord, TileOrientation orientation, Map map) : base(xCord, yCord, TileType.Dirt, orientation, map)
+        public Dirt(int xCord, int yCord, Map map) : base(xCord, yCord, TileType.Dirt, map)
         {
         }
 
@@ -25,13 +25,13 @@ namespace MooleyMania.World.Tiles
             bool bottom = false;
 
             if(xTile >= 1)
-                left = map[this.xTile - 1, this.yTile].Type != TileType.Air;
+                left = map[this.xTile - 1, this.yTile].Type == this.Type;
             if (xTile + 1 < map.MaxWidth)
-                right = map[this.xTile + 1, this.yTile].Type != TileType.Air;
+                right = map[this.xTile + 1, this.yTile].Type == this.Type;
             if (yTile >= 1)
-                top = map[this.xTile, this.yTile - 1].Type != TileType.Air;
+                top = map[this.xTile, this.yTile - 1].Type == this.Type;
             if (yTile + 1 < map.MaxHeight)
-                bottom = map[this.xTile, this.yTile + 1].Type != TileType.Air;
+                bottom = map[this.xTile, this.yTile + 1].Type == this.Type;
 
             int edgeCount = 0;
             if (left) edgeCount++;
@@ -39,30 +39,37 @@ namespace MooleyMania.World.Tiles
             if (top) edgeCount++;
             if (bottom) edgeCount++;
 
-            if(edgeCount > 2)
+            Random rand = new Random();
+
+            if (top && right && bottom && left)
             {
-                texture = content.Load<Texture2D>(@"Dirt\Backdrop" + (new Random().Next(4) + 1));
+                this.texture = content.Load<Texture2D>(this.Type + "/Fill" + (rand.Next(2) + 1));
             }
-            else if (top && right)
+            else if (!top && right && bottom && left)
             {
-                texture = content.Load<Texture2D>(@"Dirt\TopRight");
+                this.texture = content.Load<Texture2D>(this.Type + "/Top" + (rand.Next(3) + 1));
+            }            
+            else if (!top && !left && bottom && right)
+            {
+                this.texture = content.Load<Texture2D>(this.Type + "/TopLeft");
             }
-            else if (top && left)
+            else if (!top && left && bottom && !right)
             {
-                texture = content.Load<Texture2D>(@"Dirt\TopLeft");
+                this.texture = content.Load<Texture2D>(this.Type + "/TopRight");
             }
-            else if (bottom && right)
+            else if (top && right && !left)
             {
-                texture = content.Load<Texture2D>(@"Dirt\BottomRight");
+                this.texture = content.Load<Texture2D>(this.Type + "/Left" + (rand.Next(2) + 1));
             }
-            else if (bottom && left)
+            else if (top && !right && left)
             {
-                texture = content.Load<Texture2D>(@"Dirt\BottomLeft");
+                this.texture = content.Load<Texture2D>(this.Type + "/Right" + (rand.Next(2) + 1));
             }
             else
             {
-                texture = content.Load<Texture2D>(@"Dirt\Backdrop" + (new Random().Next(4) + 1));
+                this.texture = content.Load<Texture2D>(this.Type + "/Fill" + (rand.Next(2) + 1));
             }
+
         }
     }
 }

@@ -53,6 +53,7 @@
     <Compile Include="UI\InventoryBar.cs" />
     <Compile Include="UI\InventorySlot.cs" />
     <Compile Include="UI\UIElement.cs" />
+    <Compile Include="World\Background.cs" />
     <Compile Include="World\Camera.cs" />
     <Compile Include="World\Drop.cs" />
     <Compile Include="World\Generation\Perlin.cs" />

@@ -40,13 +40,12 @@ namespace MooleyMania
             this.texture = this.content.Load<Texture2D>(TileType.Air.ToString());
         }
 
-        protected Tile(int xCord, int yCord, TileType type, TileOrientation orientation, Map map)
+        protected Tile(int xCord, int yCord, TileType type, Map map)
         {
             this.xTile = xCord;
             this.yTile = yCord;
             this.map = map;
             this.Type = type;
-            this.Orientation = orientation;
             this.Rectangle = new Rectangle(xCord * Tile.Size, (yCord * Tile.Size), Tile.Size, Tile.Size);
         }
     }

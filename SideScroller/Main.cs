@@ -27,7 +27,7 @@ namespace MooleyMania
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Camera camera;
-        
+        Background background;
 
         KeyboardState pastKeyboardState;
         KeyboardState currentKeyboardState;
@@ -57,6 +57,7 @@ namespace MooleyMania
             camera = new Camera(GraphicsDevice.Viewport);
             inventoryBar = new InventoryBar(camera);
             inventory = new Inventory(camera);
+            background = new Background();
 
             base.Initialize();
         }
@@ -79,6 +80,7 @@ namespace MooleyMania
             Player.Load(Content);
             inventoryBar.Load(Content);
             inventory.Load(Content);
+            background.Load(Content);
         }
 
         protected override void UnloadContent()
@@ -144,7 +146,9 @@ namespace MooleyMania
                             (int)tileClick.Y,
                             Map.Tiles[(int) xClick / Tile.Size, (int) yClick/ Tile.Size].Type));
 
-                        tile.Clicked(gameTime);
+                        Air air = new Air((int)xClick / Tile.Size, (int)yClick / Tile.Size, Map);
+                        air.Load(Content);
+                        Map.Tiles[(int)xClick / Tile.Size, (int)yClick / Tile.Size] = air;
                     }
                 }
             }
@@ -166,10 +170,11 @@ namespace MooleyMania
 
         protected override void Draw(GameTime gameTime)
         {
-            // Set background to blue
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.Transform);
+
+            // Set background to white and render background
+            GraphicsDevice.Clear(Color.White);
+            background.Draw(spriteBatch, camera);
 
             // Draw map
             int calls = Map.Draw(spriteBatch, camera);

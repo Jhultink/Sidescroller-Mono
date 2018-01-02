@@ -9,9 +9,9 @@ using SideScroller.World.Tiles;
 
 namespace MooleyMania.World.Tiles
 {
-    class SimpleTile : Tile
+    public class SimpleTile : Tile
     {
-        public SimpleTile(int xCord, int yCord, TileType type, TileOrientation orientation, Map map) : base(xCord, yCord, type, orientation, map)
+        public SimpleTile(int xCord, int yCord, TileType type, Map map) : base(xCord, yCord, type, map)
         {
         }
 

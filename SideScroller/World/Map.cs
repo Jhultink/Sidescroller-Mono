@@ -20,6 +20,10 @@ namespace MooleyMania
 
         public readonly int MaxHeight;
 
+        public readonly int skyStart;
+
+        public readonly int hillsStart;
+
         private Tile[,] tiles;
 
         public List<Drop> Drops { get; } = new List<Drop>(); 
@@ -28,9 +32,11 @@ namespace MooleyMania
         {
             this.MaxWidth = width;
             this.MaxHeight = height;
+            skyStart = this.MaxHeight / 10; // At 10%
+            hillsStart = this.MaxHeight / 5; // At 20%
         }
 
-        public Tile this[int x, int y]
+    public Tile this[int x, int y]
         {
             get
             {
@@ -47,23 +53,18 @@ namespace MooleyMania
 
             stopwatch.Start();
 
-            int totalWidth = this.MaxWidth;
-            int totalHeight = this.MaxHeight;
-            int skyStart = this.MaxHeight / 10; // At 10%
-            int hillsStart = this.MaxHeight / 5; // At 20%
-
-            tiles = new Tile[totalWidth, totalHeight];
+            tiles = new Tile[MaxWidth, MaxHeight];
 
             Random random = new Random();
 
             float offset = (float)random.NextDouble() * Int16.MaxValue;
 
-            for (int i = 0; i < totalWidth; i++)
+            for (int i = 0; i < MaxWidth; i++)
             {
                 // Generate sky
                 for (int j = 0; j < skyStart; j++)
                 {
-                    tiles[i, j] = new Air(i, j, TileOrientation.Center, this);
+                    tiles[i, j] = new Air(i, j, this);
                 }
 
                 // Generate hills 
@@ -72,31 +73,31 @@ namespace MooleyMania
                 for (int j = skyStart; j < hillsStart; j++)
                 {
                     if (j < landHeight)
-                        tiles[i, j] = new Air(i, j, TileOrientation.Center, this);
+                        tiles[i, j] = new Air(i, j, this);
                     else
-                        tiles[i, j] = new Dirt(i, j, TileOrientation.Center, this);
+                        tiles[i, j] = new Dirt(i, j, this);
                 }
 
                 // Generate underground
-                for (int j = hillsStart; j < totalHeight; j++)
+                for (int j = hillsStart; j < MaxHeight; j++)
                 {
-                    tiles[i, j] = new Dirt(i, j, TileOrientation.Center, this);
+                    tiles[i, j] = new Dirt(i, j, this);
                 }
 
-                for (int j = skyStart; j < totalHeight; j++)
+                for (int j = skyStart; j < MaxHeight; j++)
                 {
                     float cavesPerlin = Perlin.Fbm((i * .05f) + offset, (j * .05f) + offset, 8);
 
                     if (cavesPerlin > .2)
                     {
-                        tiles[i, j] = new Air(i, j, TileOrientation.Center, this);
+                        tiles[i, j] = new Air(i, j, this);
                     }
                 }
             }
 
-            for (int i = 0; i < totalWidth; i++)
+            for (int i = 0; i < MaxWidth; i++)
             {
-                for (int j = 0; j < totalHeight; j++)
+                for (int j = 0; j < MaxHeight; j++)
                 {
                     if (tiles[i, j].Type == TileType.Air)
                     {
@@ -105,11 +106,11 @@ namespace MooleyMania
                 }
             }
         
-            Bitmap bitmap = new Bitmap(totalWidth, totalHeight);
+            Bitmap bitmap = new Bitmap(MaxWidth, MaxHeight);
 
-            for (int i = 0; i < totalWidth; i++)
+            for (int i = 0; i < MaxWidth; i++)
             {
-                for (int j = 0; j < totalHeight; j++)
+                for (int j = 0; j < MaxHeight; j++)
                 {
                     if (tiles[i, j].Type == TileType.Air)
                         bitmap.SetPixel(i, j, System.Drawing.Color.White);
