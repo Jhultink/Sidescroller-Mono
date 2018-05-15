@@ -9,8 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 namespace MooleyMania
 {
@@ -36,7 +34,7 @@ namespace MooleyMania
             hillsStart = this.MaxHeight / 5; // At 20%
         }
 
-    public Tile this[int x, int y]
+        public Tile this[int x, int y]
         {
             get
             {

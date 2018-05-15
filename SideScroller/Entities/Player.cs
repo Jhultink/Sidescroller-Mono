@@ -13,9 +13,9 @@ namespace MooleyMania
 {
     public class Player : Entity
     {
-        private const float VERTICAL_VELOCITY = 3f;
+        private const float VERTICAL_VELOCITY = 2f;
 
-        private const float HORIZONTAL_VELOCITY = 6f;
+        private const float HORIZONTAL_VELOCITY = 3f;
 
         public const int PickupRange = 10;
 
@@ -28,6 +28,13 @@ namespace MooleyMania
         public Vector2 TilePosition { get { return Position / Tile.Size; } }
 
         public Rectangle Bounds;
+
+        // Directional collision bounds
+
+        private Rectangle topRect;
+        private Rectangle rightRect;
+        private Rectangle bottomRect;
+        private Rectangle leftRect;
 
         private bool hasJumped = false;
 
@@ -45,6 +52,10 @@ namespace MooleyMania
         {
             Position += velocity;
             Bounds = new Rectangle((int)Position.X, (int)Position.Y, Tile.Size * 2, Tile.Size * 3);
+
+            topRect = new Rectangle((int)Position.X, (int)Position.Y, Tile.Size * 2, Tile.Size);
+
+            bottomRect = topRect = new Rectangle((int)Position.X, (int)Position.Y + Tile.Size * 2, Tile.Size * 2, Tile.Size);
 
             Input(gameTime);
 
