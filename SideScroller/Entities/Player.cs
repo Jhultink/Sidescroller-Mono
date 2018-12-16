@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SideScroller.Components;
 using SideScroller.Entities;
 using SideScroller.UI;
 using System;
@@ -9,37 +10,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MooleyMania
+namespace SideScroller
 {
     public class Player : Entity
     {
-        private const float VERTICAL_VELOCITY = 2f;
-
-        private const float HORIZONTAL_VELOCITY = 3f;
-
         public const int PickupRange = 10;
 
-        public Vector2 velocity;
-
+        public Vector2 Velocity;
         public Vector2 Position;
-
         public Inventory Inventory;
-
-        public Vector2 TilePosition { get { return Position / Tile.Size; } }
-
         public Rectangle Bounds;
 
-        // Directional collision bounds
+        public Vector2 TilePosition => Position / Tile.Size;
+        
+        #region Components
+        private InputComponent _input;
+        private PhysicsComponent _physics;
+        #endregion
 
-        private Rectangle topRect;
-        private Rectangle rightRect;
-        private Rectangle bottomRect;
-        private Rectangle leftRect;
-
-        private bool hasJumped = false;
-
-        public Player(int x, int y)
+        public Player(int x, int y, InputComponent input, PhysicsComponent physics)
         {
+            _input = input;
+            _physics = physics;
+
             Position = new Vector2(x * Tile.Size, y * Tile.Size);
         }
 
@@ -50,54 +43,24 @@ namespace MooleyMania
 
         public override void Update(GameTime gameTime)
         {
-            Position += velocity;
-            Bounds = new Rectangle((int)Position.X, (int)Position.Y, Tile.Size * 2, Tile.Size * 3);
+            _input.Update(this, gameTime);
+            _physics.Update(this, gameTime);
+        }   
 
-            topRect = new Rectangle((int)Position.X, (int)Position.Y, Tile.Size * 2, Tile.Size);
-
-            bottomRect = topRect = new Rectangle((int)Position.X, (int)Position.Y + Tile.Size * 2, Tile.Size * 2, Tile.Size);
-
-            Input(gameTime);
-
-            if (velocity.Y < 10)
-                velocity.Y += 0.4f;
-        }
-        
-        public void Input(GameTime gameTime)
+        public void Draw(SpriteBatch batch, Camera camera)
         {
-            //if (Keyboard.GetState().IsKeyDown(Keys.D))
-            //     velocity.X = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 3;
-            //else if (Keyboard.GetState().IsKeyDown(Keys.A))
-            //    velocity.X = -(float)gameTime.ElapsedGameTime.TotalMilliseconds / 3;
-            //else
-            //    velocity.X = 0f;
-
-
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-                velocity.X = HORIZONTAL_VELOCITY;
-            else if (Keyboard.GetState().IsKeyDown(Keys.A))
-                velocity.X = -HORIZONTAL_VELOCITY;
-            else
-                velocity.X = 0f;
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && !hasJumped)
-            {
-                Position.Y -= 3f;
-                velocity.Y = -VERTICAL_VELOCITY;
-                hasJumped = true;
-            }
+            batch.Draw(texture, Bounds, Color.White);
         }
-        
         public void Collision(Rectangle newRectangle, int xOffset, int yOffset)
-        {             
-            if(Bounds.TouchTopOf(newRectangle))
+        {
+            if (Bounds.TouchTopOf(newRectangle))
             {
                 Bounds.Y = newRectangle.Y - Bounds.Height;
-                velocity.Y = 0f;
-                hasJumped = false;
+                Velocity.Y = 0f;
+                //hasJumped = false;
             }
 
-            if(Bounds.TouchLeftOf(newRectangle))
+            if (Bounds.TouchLeftOf(newRectangle))
             {
                 Position.X = newRectangle.X - Bounds.Width - 1;
                 //position.X = newRectangle.X + newRectangle.Width + 1;
@@ -111,24 +74,17 @@ namespace MooleyMania
 
             if (Bounds.TouchBottomOf(newRectangle))
             {
-                velocity.Y = 1f;
+                Velocity.Y = 1f;
             }
-
 
             if (Position.X < 0)
                 Position.X = 0;
             if (Position.X > xOffset * Tile.Size - Bounds.Width)
                 Position.X = xOffset * Tile.Size - Bounds.Width;
             if (Position.Y < 0)
-                velocity.Y = 1f;
+                Velocity.Y = 1f;
             if (Position.Y > yOffset * Tile.Size - Bounds.Height)
                 Position.Y = yOffset * Tile.Size - Bounds.Height;
-        }
-
-
-        public void Draw(SpriteBatch batch, Camera camera)
-        {
-            batch.Draw(texture, Bounds, Color.White);
         }
     }
 }

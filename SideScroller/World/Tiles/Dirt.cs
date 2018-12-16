@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using SideScroller.World.Tiles;
 
-namespace MooleyMania.World.Tiles
+namespace SideScroller.World.Tiles
 {
     public class Dirt : Tile
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using MooleyMania;
-using MooleyMania.UI;
+using SideScroller;
+using SideScroller.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;

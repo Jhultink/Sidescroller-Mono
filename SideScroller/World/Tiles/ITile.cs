@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MooleyMania.World.Tiles
+namespace SideScroller.World.Tiles
 {
     interface ITile
     {

@@ -1,4 +1,4 @@
-﻿using MooleyMania;
+﻿using SideScroller;
 using System;
 
 namespace SideScroller

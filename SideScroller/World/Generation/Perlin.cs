@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MooleyMania.World.Generation
+namespace SideScroller.World.Generation
 {
     public static class Perlin
     {

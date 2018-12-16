@@ -1,14 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MooleyMania.World.Tiles;
+using SideScroller.World.Tiles;
 using SideScroller.World.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MooleyMania
+namespace SideScroller
 {
     public abstract class Tile : ITile
     {

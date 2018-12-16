@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MooleyMania.UI
+namespace SideScroller.UI
 {
     public abstract class UIElement
     {

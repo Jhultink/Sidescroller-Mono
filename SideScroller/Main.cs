@@ -1,21 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 using System.Diagnostics;
-using MooleyMania.Helpers;
-using MooleyMania.UI;
-using MooleyMania.World.Tiles;
-using SideScroller.World;
 using SideScroller.Helpers;
 using SideScroller.UI;
+using SideScroller.World.Tiles;
+using SideScroller.World;
+using SideScroller.Components;
 
-namespace MooleyMania
+namespace SideScroller
 {
     public class Main : Game
     {
@@ -53,7 +47,7 @@ namespace MooleyMania
         {
 
             Map = new Map(200, 1000);
-            Player = new Player(50, 0);
+            Player = new Player(50, 0, new InputComponent(), new PhysicsComponent());
             camera = new Camera(GraphicsDevice.Viewport);
             inventoryBar = new InventoryBar(camera);
             inventory = new Inventory(camera);

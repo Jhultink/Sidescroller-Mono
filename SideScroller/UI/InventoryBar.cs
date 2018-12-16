@@ -7,7 +7,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Content;
 using SideScroller.UI;
 
-namespace MooleyMania.UI
+namespace SideScroller.UI
 {
     public class InventoryBar : UIElement
     {

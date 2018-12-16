@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SideScroller.World.Tiles;
 
-namespace MooleyMania.World.Tiles
+namespace SideScroller.World.Tiles
 {
     class Air : Tile
     {

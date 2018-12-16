@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MooleyMania;
+using SideScroller;
 using SideScroller.Helpers;
 using System;
 using System.Collections.Generic;
