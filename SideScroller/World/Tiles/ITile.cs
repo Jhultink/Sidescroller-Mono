@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SideScroller.World.Tiles
+namespace SideScroller.ScrollerWorld.Tiles
 {
     interface ITile
     {

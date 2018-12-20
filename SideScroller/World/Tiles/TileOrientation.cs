@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SideScroller.World.Tiles
+namespace SideScroller.ScrollerWorld.Tiles
 {
     public enum TileOrientation
     {

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SideScroller.World
+namespace SideScroller.ScrollerWorld
 {
     public class Background
     {

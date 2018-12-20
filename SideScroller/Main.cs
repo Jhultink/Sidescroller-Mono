@@ -5,9 +5,13 @@ using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using SideScroller.Helpers;
 using SideScroller.UI;
-using SideScroller.World.Tiles;
-using SideScroller.World;
+using SideScroller.ScrollerWorld.Tiles;
+using SideScroller.ScrollerWorld;
 using SideScroller.Components;
+using FarseerPhysics;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Joints;
+using FarseerPhysics.Factories;
 
 namespace SideScroller
 {
@@ -17,6 +21,8 @@ namespace SideScroller
         public static Player Player;
         public static InventoryBar inventoryBar;
         public static Inventory inventory;
+
+        World World;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -41,12 +47,13 @@ namespace SideScroller
         {
             camera.UpdateScreenSize(this.Window.ClientBounds.Width, this.Window.ClientBounds.Height);
             inventoryBar.UpdateRelativePosition(new Vector2(camera.Bounds.Right - 50, camera.Bounds.Top + 50));
+
+            ConvertUnits.SetDisplayUnitToSimUnitRatio(Tile.Size);
         }
 
         protected override void Initialize()
         {
-
-            Map = new Map(200, 1000);
+            Map = new Map(10, 10);
             Player = new Player(50, 0, new InputComponent(), new PhysicsComponent());
             camera = new Camera(GraphicsDevice.Viewport);
             inventoryBar = new InventoryBar(camera);
@@ -58,6 +65,8 @@ namespace SideScroller
 
         protected override void LoadContent()
         {
+            World = new World(new Vector2(0, 9.8f));
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Keyboard and mouse setup
@@ -66,7 +75,7 @@ namespace SideScroller
             pastMouseState = Mouse.GetState();
             currentMouseState = Mouse.GetState();
 
-            Map.Generate();
+            Map.Generate(World);
 
             Drop.Content = Content;
 
@@ -140,7 +149,7 @@ namespace SideScroller
                             (int)tileClick.Y,
                             Map.Tiles[(int) xClick / Tile.Size, (int) yClick/ Tile.Size].Type));
 
-                        Air air = new Air((int)xClick / Tile.Size, (int)yClick / Tile.Size, Map);
+                        Air air = new Air((int)xClick / Tile.Size, (int)yClick / Tile.Size, Map, World);
                         air.Load(Content);
                         Map.Tiles[(int)xClick / Tile.Size, (int)yClick / Tile.Size] = air;
                     }
@@ -181,7 +190,7 @@ namespace SideScroller
             inventory.Draw(spriteBatch, camera);
 
             spriteBatch.End();
-            
+           
             base.Draw(gameTime);
         }
     }

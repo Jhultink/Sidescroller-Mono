@@ -1,10 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FarseerPhysics.Dynamics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using SideScroller.World.Generation;
-using SideScroller.World.Tiles;
-using SideScroller.World;
-using SideScroller.World.Tiles;
+using SideScroller.ScrollerWorld;
+using SideScroller.ScrollerWorld.Generation;
+using SideScroller.ScrollerWorld.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -42,7 +42,7 @@ namespace SideScroller
 
         public Tile[,] Tiles { get; private set; }
 
-        public void Generate()
+        public void Generate(World world)
         {
             Debug.WriteLine("Generating terrain...");
             Stopwatch stopwatch = new Stopwatch();
@@ -60,7 +60,7 @@ namespace SideScroller
                 // Generate sky
                 for (int j = 0; j < skyStart; j++)
                 {
-                    Tiles[i, j] = new Air(i, j, this);
+                    Tiles[i, j] = new Air(i, j, this, world);
                 }
 
                 // Generate hills 
@@ -69,15 +69,15 @@ namespace SideScroller
                 for (int j = skyStart; j < hillsStart; j++)
                 {
                     if (j < landHeight)
-                        Tiles[i, j] = new Air(i, j, this);
+                        Tiles[i, j] = new Air(i, j, this, world);
                     else
-                        Tiles[i, j] = new Dirt(i, j, this);
+                        Tiles[i, j] = new Dirt(i, j, this, world);
                 }
 
                 // Generate underground
                 for (int j = hillsStart; j < MaxHeight; j++)
                 {
-                    Tiles[i, j] = new Dirt(i, j, this);
+                    Tiles[i, j] = new Dirt(i, j, this, world);
                 }
 
                 for (int j = skyStart; j < MaxHeight; j++)
@@ -86,7 +86,7 @@ namespace SideScroller
 
                     if (cavesPerlin > .2)
                     {
-                        Tiles[i, j] = new Air(i, j, this);
+                        Tiles[i, j] = new Air(i, j, this, world);
                     }
                 }
             }

@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FarseerPhysics;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using SideScroller.World.Tiles;
-using SideScroller.World.Tiles;
+using SideScroller.ScrollerWorld.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,33 +22,41 @@ namespace SideScroller
         protected Texture2D texture;
         protected int xTile;
         protected int yTile;
+        protected Body body;
+        protected World world;
 
         public Rectangle Rectangle { get; protected set; }
 
+        protected Tile(int xCord, int yCord, TileType type, Map map, World world)
+        {
+            this.xTile = xCord;
+            this.yTile = yCord;
+            this.map = map;
+            this.Type = type;
+            this.world = world;
+            this.Rectangle = new Rectangle(xCord * Tile.Size, (yCord * Tile.Size), Tile.Size, Tile.Size);
+        }
+
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, Rectangle, Color.White);
+            spriteBatch.Draw(texture, ConvertUnits.ToDisplayUnits(body.Position), Color.White);
         }
 
         public virtual void Load(ContentManager content)
         {
             this.content = content;
+
             texture = content.Load<Texture2D>(Type.ToString());
+
+            body = BodyFactory.CreateRectangle(world, 5f, 5f, 1f);
+            body.Position = new Vector2(xTile, yTile);
+            body.BodyType = BodyType.Dynamic;
         }
 
         public virtual void Clicked(GameTime gameTime)
         {
             this.Type = TileType.Air;
             this.texture = this.content.Load<Texture2D>(TileType.Air.ToString());
-        }
-
-        protected Tile(int xCord, int yCord, TileType type, Map map)
-        {
-            this.xTile = xCord;
-            this.yTile = yCord;
-            this.map = map;
-            this.Type = type;
-            this.Rectangle = new Rectangle(xCord * Tile.Size, (yCord * Tile.Size), Tile.Size, Tile.Size);
         }
     }
 }

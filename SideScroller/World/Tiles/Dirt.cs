@@ -5,19 +5,20 @@ using System.Text;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using SideScroller.World.Tiles;
+using SideScroller.ScrollerWorld.Tiles;
+using FarseerPhysics.Dynamics;
 
-namespace SideScroller.World.Tiles
+namespace SideScroller.ScrollerWorld.Tiles
 {
     public class Dirt : Tile
     {
-        public Dirt(int xCord, int yCord, Map map) : base(xCord, yCord, TileType.Dirt, map)
+        public Dirt(int xCord, int yCord, Map map, World world) : base(xCord, yCord, TileType.Dirt, map, world)
         {
         }
 
         public override void Load(ContentManager content)
         {
-            this.content = content;
+            base.Load(content);
 
             bool left = false;
             bool right = false;
@@ -69,7 +70,6 @@ namespace SideScroller.World.Tiles
             {
                 this.texture = content.Load<Texture2D>(this.Type + "/Fill" + (rand.Next(2) + 1));
             }
-
         }
     }
 }
