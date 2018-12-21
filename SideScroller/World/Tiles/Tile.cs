@@ -24,9 +24,8 @@ namespace SideScroller
         protected int yTile;
         protected Body body;
         protected World world;
-
-        public Rectangle Rectangle { get; protected set; }
-
+        protected Vector2 Bounds;
+        
         protected Tile(int xCord, int yCord, TileType type, Map map, World world)
         {
             this.xTile = xCord;
@@ -34,13 +33,12 @@ namespace SideScroller
             this.map = map;
             this.Type = type;
             this.world = world;
-            this.Rectangle = new Rectangle(xCord * Tile.Size, (yCord * Tile.Size), Tile.Size, Tile.Size);
+            this.Bounds = new Vector2(1, 1);
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Draw(texture, ConvertUnits.ToDisplayUnits(body.Position), Color.White);
-            spriteBatch.Draw(texture, new Rectangle(ConvertUnits.ToDisplayUnits(body.Position).ToPoint(), new Point(Tile.Size)), Color.White);
+            spriteBatch.Draw(texture, new Rectangle(ConvertUnits.ToDisplayUnits(body.Position - (Bounds / 2)).ToPoint(), new Point(Tile.Size)), Color.White);
         }
 
         public virtual void Load(ContentManager content)

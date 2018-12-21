@@ -17,7 +17,7 @@ namespace SideScroller.Components
         public void Update(Player player, GameTime gameTime)
         {
             player.Position += player.Velocity;
-            player.Bounds = new Rectangle((int)player.Position.X, (int)player.Position.Y, Tile.Size * 2, Tile.Size * 3);
+            //player.Bounds = new Rectangle((int)player.Position.X, (int)player.Position.Y, Tile.Size * 2, Tile.Size * 3);
 
             topRect = new Rectangle((int)player.Position.X, (int)player.Position.Y, Tile.Size * 2, Tile.Size);
 

@@ -27,6 +27,9 @@ namespace SideScroller.ScrollerWorld.Tiles
         {
             base.Load(content);
 
+            body.CollisionCategories = Category.Cat2;
+            body.CollidesWith = Category.None;
+
             if (this.yTile > map.hillsStart)
             {
                 this.texture = content.Load<Texture2D>(@"Backdrops/Backdrop" + (new Random().Next(4) + 1));

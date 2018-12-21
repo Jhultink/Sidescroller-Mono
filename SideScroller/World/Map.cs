@@ -130,9 +130,9 @@ namespace SideScroller
             int renderDistance = (int)(camera.Bounds.Width / Tile.Size) + 5;
             int calls = 0;
 
-            for (int x = (int)Main.Player.TilePosition.X - renderDistance; x < (int)Main.Player.TilePosition.X + renderDistance; x++)
+            for (int x = (int)Main.Player.Position.X - renderDistance; x < (int)Main.Player.Position.X + renderDistance; x++)
             {
-                for (int y = (int)Main.Player.TilePosition.Y - renderDistance; y < (int)Main.Player.TilePosition.Y + renderDistance; y++)
+                for (int y = (int)Main.Player.Position.Y - renderDistance; y < (int)Main.Player.Position.Y + renderDistance; y++)
                 {
                     if (x >= 0 && x < this.MaxWidth && y >= 0 && y < this.MaxHeight)
                     {
@@ -162,7 +162,7 @@ namespace SideScroller
                 drop.DetectCollisions(this);
 
                 // Calc dist from drop tp player
-                float distToPlayer = Vector2.Distance(drop.Position, Main.Player.Bounds.Center.ToVector2());
+                float distToPlayer = Vector2.Distance(drop.Position, Main.Player.Position);
 
                 if (distToPlayer < 2 * Tile.Size)
                 {

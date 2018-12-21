@@ -52,7 +52,6 @@ namespace SideScroller
         protected override void Initialize()
         {
             Map = new Map(100, 100);
-            Player = new Player(50, 0, new InputComponent(), new PhysicsComponent());
             camera = new Camera(GraphicsDevice.Viewport);
             inventoryBar = new InventoryBar(camera);
             inventory = new Inventory(camera);
@@ -66,6 +65,8 @@ namespace SideScroller
         protected override void LoadContent()
         {
             World = new World(new Vector2(0, 9.8f));
+
+            Player = new Player(50, 0, new InputComponent(), new PhysicsComponent(), World);
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -93,9 +94,7 @@ namespace SideScroller
 
         protected override void Update(GameTime gameTime)
         {
-
             World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, 1f / 30f));
-
 
             pastKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
@@ -115,24 +114,26 @@ namespace SideScroller
             inventoryBar.Update(gameTime);
             inventory.Update(gameTime);
 
+            camera.Update(ConvertUnits.ToDisplayUnits(Player.Position), Map.MaxWidth, Map.MaxHeight);
+
             // Player collisions
-            int collisionUpdateDistance = 50;
-            int calls = 0;
-            for (int x = (int)Player.TilePosition.X - collisionUpdateDistance; x < (int)Player.TilePosition.X + collisionUpdateDistance; x++)
-            {
-                for (int y = (int)Player.TilePosition.Y - collisionUpdateDistance; y < (int)Player.TilePosition.Y + collisionUpdateDistance; y++)
-                {
-                    if (x >= 0 && x < Map.MaxWidth && y >= 0 && y < Map.MaxHeight)
-                    {
-                        if (Map.Tiles[x, y].Type != TileType.Air)
-                            Player.Collision(Map.Tiles[x, y].Rectangle, Map.MaxWidth, Map.MaxHeight);
-
-                        calls++;
-
-                        camera.Update(Player.Position, Map.MaxWidth, Map.MaxHeight);
-                    }
-                }
-            }
+            //int collisionUpdateDistance = 50;
+            //int calls = 0;
+            //for (int x = (int)Player.TilePosition.X - collisionUpdateDistance; x < (int)Player.TilePosition.X + collisionUpdateDistance; x++)
+            //{
+            //    for (int y = (int)Player.TilePosition.Y - collisionUpdateDistance; y < (int)Player.TilePosition.Y + collisionUpdateDistance; y++)
+            //    {
+            //        if (x >= 0 && x < Map.MaxWidth && y >= 0 && y < Map.MaxHeight)
+            //        {
+            //            if (Map.Tiles[x, y].Type != TileType.Air)
+            //                Player.Collision(Map.Tiles[x, y].Rectangle, Map.MaxWidth, Map.MaxHeight);
+            //
+            //            calls++;
+            //
+            //            camera.Update(Player.Position, Map.MaxWidth, Map.MaxHeight);
+            //        }
+            //    }
+            //}
 
             //// Handle clicks
             //if (currentMouseState.LeftButton == ButtonState.Pressed)
@@ -161,7 +162,7 @@ namespace SideScroller
             //    }
             //}
 
-            Debug.WriteLineIf(gameTime.IsRunningSlowly, "Update is running slowly: " + calls + " tiles updated");
+            Debug.WriteLineIf(gameTime.IsRunningSlowly, "Update is running slowly");
             base.Update(gameTime);
         }
 

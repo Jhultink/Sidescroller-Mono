@@ -1,14 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FarseerPhysics;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using SideScroller.Components;
 using SideScroller.Entities;
 using SideScroller.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SideScroller
 {
@@ -19,72 +17,44 @@ namespace SideScroller
         public Vector2 Velocity;
         public Vector2 Position;
         public Inventory Inventory;
-        public Rectangle Bounds;
+        public Vector2 Bounds = new Vector2(2, 3);
 
-        public Vector2 TilePosition => Position / Tile.Size;
-        
         #region Components
         private InputComponent _input;
         private PhysicsComponent _physics;
         #endregion
 
-        public Player(int x, int y, InputComponent input, PhysicsComponent physics)
+        public Player(int x, int y, InputComponent input, PhysicsComponent physics, World world)
         {
             _input = input;
             _physics = physics;
+            this.world = world;
 
-            Position = new Vector2(x * Tile.Size, y * Tile.Size);
+            Position = new Vector2(x, y);
         }
 
         public override void Load(ContentManager Content)
         {
             texture = Content.Load<Texture2D>("player");
+
+            body = BodyFactory.CreateRectangle(world, Bounds.X, Bounds.Y, 1f);
+            body.Position = Position;
+            body.BodyType = BodyType.Dynamic;
+            body.CollisionCategories = Category.Cat1;
+            body.CollidesWith = Category.All & ~Category.Cat3; // not air
+            body.Restitution = 0;
+            body.IgnoreGravity = false;
         }
 
         public override void Update(GameTime gameTime)
         {
-            _input.Update(this, gameTime);
-            _physics.Update(this, gameTime);
+            _input.Update(this.body, gameTime);
+            //_physics.Update(this, gameTime);
         }   
 
-        public void Draw(SpriteBatch batch, Camera camera)
+        public void Draw(SpriteBatch spriteBatch, Camera camera)
         {
-            batch.Draw(texture, Bounds, Color.White);
-        }
-        public void Collision(Rectangle newRectangle, int xOffset, int yOffset)
-        {
-            if (Bounds.TouchTopOf(newRectangle))
-            {
-                Bounds.Y = newRectangle.Y - Bounds.Height;
-                Velocity.Y = 0f;
-                //hasJumped = false;
-            }
-
-            if (Bounds.TouchLeftOf(newRectangle))
-            {
-                Position.X = newRectangle.X - Bounds.Width - 1;
-                //position.X = newRectangle.X + newRectangle.Width + 1;
-            }
-            if (Bounds.TouchRightOf(newRectangle))
-            {
-                Position.X = newRectangle.X + newRectangle.Width + 1;
-                //position.X = newRectangle.X - rectangle.Width - 2;
-
-            }
-
-            if (Bounds.TouchBottomOf(newRectangle))
-            {
-                Velocity.Y = 1f;
-            }
-
-            if (Position.X < 0)
-                Position.X = 0;
-            if (Position.X > xOffset * Tile.Size - Bounds.Width)
-                Position.X = xOffset * Tile.Size - Bounds.Width;
-            if (Position.Y < 0)
-                Velocity.Y = 1f;
-            if (Position.Y > yOffset * Tile.Size - Bounds.Height)
-                Position.Y = yOffset * Tile.Size - Bounds.Height;
+            spriteBatch.Draw(texture, new Rectangle(ConvertUnits.ToDisplayUnits(body.Position - (Bounds / 2)).ToPoint(), ConvertUnits.ToDisplayUnits(Bounds).ToPoint()), Color.White);
         }
     }
 }

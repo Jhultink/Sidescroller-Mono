@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FarseerPhysics.Dynamics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SideScroller;
 using System;
@@ -11,24 +12,19 @@ namespace SideScroller.Components
 {
     public class InputComponent
     {
-        private const float VERTICAL_VELOCITY = 2f;
+        private const float VERTICAL_VELOCITY = 12f;
         private const float HORIZONTAL_VELOCITY = 3f;
-        private bool hasJumped = false;
 
-        public void Update(Player player, GameTime gameTime)
+        public void Update(Body body, GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.D))
-                player.Velocity.X = HORIZONTAL_VELOCITY;
+                body.ApplyLinearImpulse(new Vector2(HORIZONTAL_VELOCITY, 0));
             else if (Keyboard.GetState().IsKeyDown(Keys.A))
-                player.Velocity.X = -HORIZONTAL_VELOCITY;
-            else
-                player.Velocity.X = 0f;
+                body.ApplyLinearImpulse(new Vector2(-HORIZONTAL_VELOCITY, 0));
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space) && !hasJumped)
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
-                //player.Position.Y -= 3f;
-                player.Velocity.Y = -VERTICAL_VELOCITY;
-                hasJumped = true;
+                body.ApplyLinearImpulse(new Vector2(0, -VERTICAL_VELOCITY));
             }
         }
     }

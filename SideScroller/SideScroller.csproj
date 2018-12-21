@@ -50,6 +50,7 @@
     <Compile Include="Helpers\RectangleHelper.cs" />
     <Compile Include="Helpers\VectorHelpers.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Physics\CollisionCategories.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Inventory.cs" />

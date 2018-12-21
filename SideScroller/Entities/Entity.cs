@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FarseerPhysics.Dynamics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -12,6 +13,8 @@ namespace SideScroller.Entities
     public abstract class Entity
     {
         protected Texture2D texture;
+        protected Body body;
+        protected World world;
 
         public abstract void Load(ContentManager Content);
 

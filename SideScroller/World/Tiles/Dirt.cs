@@ -20,6 +20,9 @@ namespace SideScroller.ScrollerWorld.Tiles
         {
             base.Load(content);
 
+            body.CollisionCategories = Category.Cat1;
+            body.CollidesWith = Category.All & ~Category.Cat2;
+
             bool left = false;
             bool right = false;
             bool top = false;
