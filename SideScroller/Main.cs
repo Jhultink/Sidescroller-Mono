@@ -47,18 +47,18 @@ namespace SideScroller
         {
             camera.UpdateScreenSize(this.Window.ClientBounds.Width, this.Window.ClientBounds.Height);
             inventoryBar.UpdateRelativePosition(new Vector2(camera.Bounds.Right - 50, camera.Bounds.Top + 50));
-
-            ConvertUnits.SetDisplayUnitToSimUnitRatio(Tile.Size);
         }
 
         protected override void Initialize()
         {
-            Map = new Map(10, 10);
+            Map = new Map(100, 100);
             Player = new Player(50, 0, new InputComponent(), new PhysicsComponent());
             camera = new Camera(GraphicsDevice.Viewport);
             inventoryBar = new InventoryBar(camera);
             inventory = new Inventory(camera);
             background = new Background();
+
+            ConvertUnits.SetDisplayUnitToSimUnitRatio(Tile.Size);
 
             base.Initialize();
         }
@@ -93,6 +93,10 @@ namespace SideScroller
 
         protected override void Update(GameTime gameTime)
         {
+
+            World.Step(Math.Min((float)gameTime.ElapsedGameTime.TotalSeconds, 1f / 30f));
+
+
             pastKeyboardState = currentKeyboardState;
             currentKeyboardState = Keyboard.GetState();
 
@@ -122,6 +126,7 @@ namespace SideScroller
                     {
                         if (Map.Tiles[x, y].Type != TileType.Air)
                             Player.Collision(Map.Tiles[x, y].Rectangle, Map.MaxWidth, Map.MaxHeight);
+
                         calls++;
 
                         camera.Update(Player.Position, Map.MaxWidth, Map.MaxHeight);
@@ -129,32 +134,32 @@ namespace SideScroller
                 }
             }
 
-            // Handle clicks
-            if (currentMouseState.LeftButton == ButtonState.Pressed)
-            {
-                // Checks to make sure clicks are inside screen
-                if (currentMouseState.X >= 0 && currentMouseState.X < camera.Bounds.Width && currentMouseState.Y > 0 && currentMouseState.Y < camera.Bounds.Height)
-                {
-                    float xClick = currentMouseState.ToAbsolute(camera).X;
-                    float yClick = currentMouseState.ToAbsolute(camera).Y;
-
-                    Vector2 tileClick = currentMouseState.ToAbsolute(camera).ToTile();
-
-                    Tile tile = Map.Tiles[(int)xClick / Tile.Size, (int)yClick / Tile.Size];
-
-                    if (tile.Type != TileType.Air)
-                    {
-                        Map.Drops.Add(new Drop(
-                            (int)tileClick.X,
-                            (int)tileClick.Y,
-                            Map.Tiles[(int) xClick / Tile.Size, (int) yClick/ Tile.Size].Type));
-
-                        Air air = new Air((int)xClick / Tile.Size, (int)yClick / Tile.Size, Map, World);
-                        air.Load(Content);
-                        Map.Tiles[(int)xClick / Tile.Size, (int)yClick / Tile.Size] = air;
-                    }
-                }
-            }
+            //// Handle clicks
+            //if (currentMouseState.LeftButton == ButtonState.Pressed)
+            //{
+            //    // Checks to make sure clicks are inside screen
+            //    if (currentMouseState.X >= 0 && currentMouseState.X < camera.Bounds.Width && currentMouseState.Y > 0 && currentMouseState.Y < camera.Bounds.Height)
+            //    {
+            //        float xClick = currentMouseState.ToAbsolute(camera).X;
+            //        float yClick = currentMouseState.ToAbsolute(camera).Y;
+            //
+            //        Vector2 tileClick = currentMouseState.ToAbsolute(camera).ToTile();
+            //
+            //        Tile tile = Map.Tiles[(int)xClick / Tile.Size, (int)yClick / Tile.Size];
+            //
+            //        if (tile.Type != TileType.Air)
+            //        {
+            //            Map.Drops.Add(new Drop(
+            //                (int)tileClick.X,
+            //                (int)tileClick.Y,
+            //                Map.Tiles[(int) xClick / Tile.Size, (int) yClick/ Tile.Size].Type));
+            //
+            //            Air air = new Air((int)xClick / Tile.Size, (int)yClick / Tile.Size, Map, World);
+            //            air.Load(Content);
+            //            Map.Tiles[(int)xClick / Tile.Size, (int)yClick / Tile.Size] = air;
+            //        }
+            //    }
+            //}
 
             Debug.WriteLineIf(gameTime.IsRunningSlowly, "Update is running slowly: " + calls + " tiles updated");
             base.Update(gameTime);

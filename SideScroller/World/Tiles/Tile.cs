@@ -39,7 +39,8 @@ namespace SideScroller
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, ConvertUnits.ToDisplayUnits(body.Position), Color.White);
+            //spriteBatch.Draw(texture, ConvertUnits.ToDisplayUnits(body.Position), Color.White);
+            spriteBatch.Draw(texture, new Rectangle(ConvertUnits.ToDisplayUnits(body.Position).ToPoint(), new Point(Tile.Size)), Color.White);
         }
 
         public virtual void Load(ContentManager content)
@@ -48,9 +49,9 @@ namespace SideScroller
 
             texture = content.Load<Texture2D>(Type.ToString());
 
-            body = BodyFactory.CreateRectangle(world, 5f, 5f, 1f);
+            body = BodyFactory.CreateRectangle(world, ConvertUnits.ToSimUnits(Tile.Size), ConvertUnits.ToSimUnits(Tile.Size), 1f);
             body.Position = new Vector2(xTile, yTile);
-            body.BodyType = BodyType.Dynamic;
+            body.BodyType = BodyType.Static;
         }
 
         public virtual void Clicked(GameTime gameTime)

@@ -60,8 +60,8 @@ namespace SideScroller.ScrollerWorld
                     {
                         if (map.Tiles[x, y].Type != TileType.Air)
                         {
-                            if (this.bounds.TouchTopOf(map.Tiles[x, y].Rectangle))
-                                collision = true;
+                            //if (this.bounds.TouchTopOf(map.Tiles[x, y].Rectangle))
+                                //collision = true;
                         }
                     }
                 }
